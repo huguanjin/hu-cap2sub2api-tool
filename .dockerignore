@@ -1,0 +1,18 @@
+# Frontend
+views/node_modules
+views/dist
+views/.npm-cache
+views/*.tsbuildinfo
+
+# Backend embedded frontend placeholder dir (populated during build)
+server/internal/web/dist/*
+!server/internal/web/dist/.gitkeep
+
+# VCS / editor / misc
+.git
+.github
+.claude
+*.md
+!README.md
+.gitignore
+.dockerignore

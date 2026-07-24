@@ -1,0 +1,27 @@
+# Go
+server/hu-cap2sub2api-tool
+server/*.exe
+server/*.test
+
+# Go 后端 go:embed 使用的前端产物目录：构建期由 views/ 产物填充，
+# 仓库中只保留占位文件，避免把构建产物提交进版本库。
+server/internal/web/dist/*
+!server/internal/web/dist/.gitkeep
+
+# Node / Vite 前端
+views/node_modules
+views/dist
+views/.npm-cache
+views/*.tsbuildinfo
+npm-debug.log*
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+
+# Env files that might carry secrets
+.env
+.env.*
+!.env.example

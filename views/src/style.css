@@ -1,0 +1,23 @@
+:root {
+  color-scheme: dark light;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #121212;
+  color: #eee;
+}
+
+button {
+  font-family: inherit;
+}
