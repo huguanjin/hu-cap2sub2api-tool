@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ConvertResponse, WrittenFile } from '../api/types'
+import { buildZip } from '../utils/zip'
 
 const props = defineProps<{ result: ConvertResponse | null }>()
 
@@ -19,13 +20,35 @@ function downloadOne(file: WrittenFile) {
   URL.revokeObjectURL(url)
 }
 
-async function downloadAll() {
+function downloadAll() {
   const files = props.result?.written ?? []
-  for (const file of files) {
-    downloadOne(file)
-    // eslint-disable-next-line no-await-in-loop
-    await new Promise((resolve) => setTimeout(resolve, 250))
-  }
+  if (!files.length) return
+
+  const usedNames = new Set<string>()
+  const entries = files.map((file) => {
+    let name = file.name
+    let suffix = 1
+    while (usedNames.has(name)) {
+      const dotIndex = file.name.lastIndexOf('.')
+      name =
+        dotIndex === -1
+          ? `${file.name}-${suffix}`
+          : `${file.name.slice(0, dotIndex)}-${suffix}${file.name.slice(dotIndex)}`
+      suffix += 1
+    }
+    usedNames.add(name)
+    return { name, content: file.content }
+  })
+
+  const blob = buildZip(entries)
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `converted-files-${Date.now()}.zip`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
 }
 </script>
 
@@ -34,7 +57,7 @@ async function downloadAll() {
     <div v-if="result.written.length" class="section">
       <div class="section-header">
         <h3>转换成功（{{ result.written.length }}）</h3>
-        <button type="button" class="download-all-btn" @click="downloadAll">全部下载</button>
+        <button type="button" class="download-all-btn" @click="downloadAll">全部下载（打包 zip）</button>
       </div>
       <ul class="written-list">
         <li v-for="file in result.written" :key="file.name" class="written-item">

@@ -1,0 +1,16 @@
+services:
+  app:
+    image: ghcr.io/huguanjin/hu-cap2sub2api-tool:latest
+    container_name: cap2sub2api-tool
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    restart: unless-stopped
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
